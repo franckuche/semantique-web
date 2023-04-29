@@ -15,7 +15,7 @@ except ImportError:
     import openai
 
 # Titre de l'application Streamlit
-st.title("Générateur de briefs SEO")
+st.title("Sémantique Web : Le meilleur outil pour vous brief")
 
 # Sidebar pour les paramètres utilisateur
 st.sidebar.title("Paramètres")
