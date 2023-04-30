@@ -56,14 +56,15 @@ if uploaded_file and api_key_1 and api_key_2 and api_key_3:
             {"role": "system", "content": prompt_text},
         ]
 
-        message = ("User : ")
-        if message:
-            messages.append(
-                {"role": "user", "content": message},
-            )
-            chat = openai.ChatCompletion.create(
-                model="gpt-3.5-turbo", messages=messages
-            )
+        message = ("User : message = ("User : ")
+
+  if message:
+        messages.append(
+            {"role": "user", "content": message},
+        )
+        chat = openai.ChatCompletion.create(
+            model="gpt-3.5-turbo", messages=messages
+        )
     reply = chat.choices[0].message.content
 
     # Ajout des résultats dans le DataFrame
@@ -75,15 +76,14 @@ if uploaded_file and api_key_1 and api_key_2 and api_key_3:
         "Structure Hn suggerée": reply
     })
 
-    # Conversion de la liste de résultats en DataFrame
-    df = pd.DataFrame(result_data)
+# Conversion de la liste de résultats en DataFrame
+df = pd.DataFrame(result_data)
 
-    # Affichage du DataFrame dans l'application Streamlit
-    st.write(df)
+# Affichage du DataFrame dans l'application Streamlit
+st.write(df)
 
-    # Bouton pour télécharger le fichier CSV résultant
-    csv = df.to_csv(index=False, encoding="utf-8").encode()
-    b64 = base64.b64encode(csv).decode()
-    href = f'<a href="data:file/csv;base64,{b64}" download="resultat.csv">Télécharger les résultats en format CSV</a>'
-    st.markdown(href, unsafe_allow_html=True)
-
+# Bouton pour télécharger le fichier CSV résultant
+csv = df.to_csv(index=False, encoding="utf-8").encode()
+b64 = base64.b64encode(csv).decode()
+href = f'<a href="data:file/csv;base64,{b64}" download="resultat.csv">Télécharger les résultats en format CSV</a>'
+st.markdown(href, unsafe_allow_html=True)
