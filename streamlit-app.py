@@ -56,17 +56,17 @@ if uploaded_file and api_key_1 and api_key_2 and api_key_3:
             {"role": "system", "content": prompt_text},
         ]
 
-        message = ("User : message = ("User : ")
+        message = ("User : ")
 
-  if message:
-        messages.append(
-            {"role": "user", "content": message},
-        )
-        chat = openai.ChatCompletion.create(
-            model="gpt-3.5-turbo", messages=messages
-        )
-    reply = chat.choices[0].message.content
-
+        if message:
+            messages.append(
+                {"role": "user", "content": message
+                 },
+)
+chat = openai.ChatCompletion.create(
+model="gpt-3.5-turbo", messages=messages
+)
+reply = chat.choices[0].message.content
     # Ajout des résultats dans le DataFrame
     result_data.append({
         "keyword": keyword,
