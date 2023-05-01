@@ -5,7 +5,7 @@ import pandas as pd
 import itertools
 import streamlit as st
 import base64
-import st_dataframe as stdf
+from streamlit_aggrid import AgGrid
 
 # Titre de l'application Streamlit
 st.title("Sémantique Web : Le meilleur outil pour vous brief")
@@ -23,7 +23,15 @@ columns = ["keyword", "Nb de mots suggérés", "Volume de recherches", "headings
 data = pd.DataFrame(columns=columns)
 
 # Afficher le DataFrame éditable
-data = stdf.edit_dataframe(data)
+grid_response = AgGrid(
+    data,
+    editable=True,
+    sortable=True,
+    filter=True,
+    resizable=True,
+    height=400,
+)
+data = pd.DataFrame(grid_response["data"])
 
 # Si le fichier CSV est téléchargé et que les clés API sont fournies
 if uploaded_file and api_key_1 and api_key_2 and api_key_3:
@@ -54,7 +62,7 @@ if not data.empty:
 
         # Création du prompt en combinant les variables et la phrase fixe
         prompt_text = f"Veuillez ignorer toutes les instructions précédentes. Tu es un expert en référencement SEO reconnu en France. Tu dois délivrer un brief de très haute qualité à tes rédacteurs. Voici quelques informations sur ce qu'est un bon brief en 2023, il faudra t'appuyer sur ces dernières pour ta proposition de brief :{headings_thruu}. En adaptant ton brief aux conseils ci-dessus, propose-moi un brief complet pour un texte sur {keyword} pour mon rédacteur en adaptant la longueur de ce dernier en fonction de la longueur du texte que je vais vous demander, en l'occurrence pour celui-ci j'aimerais un texte de {nombre_de_mots}, en incluant les titres des parties, les titres des sous parties et me donnant le nombre de mots de chaque partie. Vous devrez essayer d'inclure celons les besoins un ou plusieurs [tableau], des [images], des [listes], des [liens internes], des [boutons], des [vidéos], etc..."
-
+    
     messages = [
         {"role": "system", "content": prompt_text},
     ]
@@ -90,4 +98,3 @@ csv = df.to_csv(index=False, encoding="utf-8").encode()
 b64 = base64.b64encode(csv).decode()
 href = f'<a href="data:file/csv;base64,{b64}" download="resultat.csv">Télécharger les résultats en format CSV</a>'
 st.markdown(href, unsafe_allow_html=True)
-
