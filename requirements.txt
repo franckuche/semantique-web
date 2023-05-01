@@ -1,5 +1,4 @@
 openai
 panda
-streamlit-aggrid
 pip install streamlit-aggrid -vvv
 pip cache purge
