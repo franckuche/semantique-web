@@ -98,8 +98,12 @@ if data is not None and api_key_1 and api_key_2 and api_key_3:
         })
 
 # Conversion de la liste de résultats en DataFrame
-df = pd.DataFrame(result_data)
-
+try:
+    df = pd.DataFrame(result_data)
+except Exception as e:
+    st.write("Erreur lors de la création du DataFrame :")
+    st.write(e)
+    
 # Affichage du DataFrame dans l'application Streamlit
 st.write(df)
 
