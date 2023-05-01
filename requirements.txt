@@ -1,4 +1,4 @@
 openai
 panda
 streamlit-aggrid
-git+https://github.com/andfanilo/streamlit-aggrid.git
+pip install git+https://github.com/andfanilo/streamlit-aggrid.git
