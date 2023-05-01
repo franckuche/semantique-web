@@ -103,7 +103,7 @@ try:
 except Exception as e:
     st.write("Erreur lors de la création du DataFrame :")
     st.write(e)
-    
+
 # Affichage du DataFrame dans l'application Streamlit
 st.write(df)
 
