@@ -25,6 +25,35 @@ api_key_1 = st.sidebar.text_input("Clé API 1")
 api_key_2 = st.sidebar.text_input("Clé API 2")
 api_key_3 = st.sidebar.text_input("Clé API 3")
 
+def main():
+    prompts = {
+        "prompt1": "Quelle est votre couleur préférée ?",
+        "prompt2": "Quel est votre animal préféré ?",
+        "prompt3": "Quelle est votre saison préférée ?",
+        "prompt4": "Quel est votre passe-temps favori ?",
+    }
+
+    print("Veuillez choisir un numéro de prompt parmi les suivants :")
+    for i, (key, prompt) in enumerate(prompts.items(), 1):
+        print(f"{i}. {prompt}")
+
+    choice = int(input("Entrez le numéro du prompt choisi : "))
+    
+    while choice < 1 or choice > len(prompts):
+        print("Choix invalide. Veuillez réessayer.")
+        choice = int(input("Entrez le numéro du prompt choisi : "))
+
+    selected_prompt_key = list(prompts.keys())[choice - 1]
+    selected_prompt = prompts[selected_prompt_key]
+    print(f"Vous avez choisi {selected_prompt_key} : {selected_prompt}")
+    response = input("Votre réponse : ")
+    print(f"Merci ! Vous avez répondu : {response}")
+
+
+if __name__ == "__main__":
+    main()
+
+
 if uploaded_file and api_key_1 and api_key_2 and api_key_3:
     # Remplacez les clés API par vos propres clés
     api_keys = [api_key_1, api_key_2, api_key_3]
