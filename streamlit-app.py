@@ -83,7 +83,6 @@ if uploaded_file and api_key_1 and api_key_2 and api_key_3:
                 "keyword": keyword,
                 "Nb_de_mots_suggérés": nombre_de_mots,
                 "volume de recherche": volume_recherche,
-                "prompt": prompt_text,
                 "Structure Hn suggerée": reply
             })
 
