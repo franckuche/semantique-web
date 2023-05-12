@@ -28,7 +28,7 @@ api_key_3 = st.sidebar.text_input("Clé API 3")
 # Ajout d'une option pour l'utilisateur de choisir le prompt
 prompt_option = st.sidebar.selectbox(
     "Choisissez votre prompt",
-    ("prompt1", "prompt2", "prompt3")
+    ("Semantique IA", "Géoloc IA", "Business IA")
 )
 
 # Création d'un DataFrame pour stocker les résultats
