@@ -31,6 +31,9 @@ prompt_option = st.sidebar.selectbox(
     ("prompt1", "prompt2", "prompt3")
 )
 
+# Création d'un DataFrame pour stocker les résultats
+result_data = []
+
 if uploaded_file and api_key_1 and api_key_2 and api_key_3:
     # Remplacez les clés API par vos propres clés
     api_keys = [api_key_1, api_key_2, api_key_3]
@@ -40,9 +43,6 @@ if uploaded_file and api_key_1 and api_key_2 and api_key_3:
 
     # Lire le fichier CSV avec l'encodage UTF-8
     data = pd.read_csv(uploaded_file, encoding="utf-8")
-
-    # Création d'un DataFrame pour stocker les résultats
-    result_data = []
 
     # Création de trois prompts différents
     prompt1 = "Veuillez ignorer toutes les instructions précédentes..."
@@ -70,38 +70,40 @@ if uploaded_file and api_key_1 and api_key_2 and api_key_3:
 
         # Création du prompt en combinant les variables et la phrase fixe
         prompt_text = f"{prompt_text} Voici quelques informations sur ce qu'est un bon brief en 2023, il faudra t'appuyer sur ces dernières pour ta proposition de brief :{headings_thruu}. En adaptant ton brief aux conseils ci-dessus, propose-moi un brief complet pour un texte sur {keyword} pour mon rédacteur en adaptant la longueur de ce dernier en fonction de la longueur du texte que je vais vous demander, en l'occurrence pour celui-ci j'aimerais un texte de {nombre_de_mots}, en incluant les titres des parties, les titres des sous parties et me donnant le nombre de mots de chaque partie. Vous devrez essayer d'inclure celons les besoins un ou plusieurs [tableau], des [images], des [listes], des [liens internes], des [boutons], des [vidéos], etc..."
-    messages = [
-        {"role": "system", "content": prompt_text},
-    ]
 
-    message = "User : "
+        messages = [
+            {"role": "system", "content": prompt_text},
+        ]
 
-    if message:
-        messages.append(
-            {"role": "user", "content": message},
-        )
-        chat = openai.ChatCompletion.create(
-            model="gpt-4", messages=messages
-        )
-        reply = chat.choices[0].message.content
-        
-        # Ajout des résultats dans le DataFrame
-        result_data.append({
-            "keyword": keyword,
-            "Nb_de_mots_suggérés": nombre_de_mots,
-            "volume de recherche": volume_recherche,
-            "prompt": prompt_text,
-            "Structure Hn suggerée": reply
-        })
+        message = "User : "
 
-# Conversion de la liste de résultats en DataFrame
-df = pd.DataFrame(result_data)
+        if message:
+            messages.append(
+                {"role": "user", "content": message},
+            )
+            chat = openai.ChatCompletion.create(
+                model="gpt-4", messages=messages
+            )
+            reply = chat.choices[0].message.content
+            
+            # Ajout des résultats dans le DataFrame
+            result_data.append({
+                "keyword": keyword,
+                "Nb_de_mots_suggérés": nombre_de_mots,
+                "volume de recherche": volume_recherche,
+                "prompt": prompt_text,
+                "Structure Hn suggerée": reply
+            })
 
-# Affichage du DataFrame dans l'application Streamlit
-st.write(df)
+    # Conversion de la liste de résultats en DataFrame
+    df = pd.DataFrame(result_data)
 
-# Bouton pour télécharger le fichier CSV résultant
-csv = df.to_csv(index=False, encoding="utf-8").encode()
-b64 = base64.b64encode(csv).decode()
-href = f'<a href="data:file/csv;base64,{b64}" download="resultat.csv">Télécharger les résultats en format CSV</a>'
-st.markdown(href, unsafe_allow_html=True)
+    # Affichage du DataFrame dans l'application Streamlit
+    st.write(df)
+
+    # Bouton pour télécharger le fichier CSV résultant
+    csv = df.to_csv(index=False, encoding="utf-8").encode()
+    b64 = base64.b64encode(csv).decode()
+    href = f'<a href="data:file/csv;base64,{b64}" download="resultat.csv">Télécharger les résultats en format CSV</a>'
+    st.markdown(href, unsafe_allow_html=True)
+
