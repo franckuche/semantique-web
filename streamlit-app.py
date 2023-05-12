@@ -44,19 +44,6 @@ if uploaded_file and api_key_1 and api_key_2 and api_key_3:
     # Lire le fichier CSV avec l'encodage UTF-8
     data = pd.read_csv(uploaded_file, encoding="utf-8")
 
-    # Création de trois prompts différents
-    prompt1 = "Veuillez ignorer toutes les instructions précédentes..."
-    prompt2 = "Vous êtes un expert en référencement SEO reconnu en France..."
-    prompt3 = "Tu dois délivrer un brief de très haute qualité à tes rédacteurs..."
-
-    # Sélection du prompt en fonction de l'option choisie par l'utilisateur
-    if prompt_option == "prompt1":
-        prompt_text = prompt1
-    elif prompt_option == "prompt2":
-        prompt_text = prompt2
-    elif prompt_option == "prompt3":
-        prompt_text = prompt3
-
     # Traitement de chaque ligne du fichier CSV
     for index, row in data.iterrows():
         keyword = row["keyword"]
@@ -68,8 +55,13 @@ if uploaded_file and api_key_1 and api_key_2 and api_key_3:
         # Choisir la clé API suivante
         openai.api_key = next(api_key_cycle)
 
-        # Création du prompt en combinant les variables et la phrase fixe
-        prompt_text = f"{prompt_text} Voici quelques informations sur ce qu'est un bon brief en 2023, il faudra t'appuyer sur ces dernières pour ta proposition de brief :{headings_thruu}. En adaptant ton brief aux conseils ci-dessus, propose-moi un brief complet pour un texte sur {keyword} pour mon rédacteur en adaptant la longueur de ce dernier en fonction de la longueur du texte que je vais vous demander, en l'occurrence pour celui-ci j'aimerais un texte de {nombre_de_mots}, en incluant les titres des parties, les titres des sous parties et me donnant le nombre de mots de chaque partie. Vous devrez essayer d'inclure celons les besoins un ou plusieurs [tableau], des [images], des [listes], des [liens internes], des [boutons], des [vidéos], etc..."
+        # Création du prompt en fonction de l'option choisie par l'utilisateur
+        if prompt_option == "prompt1":
+            prompt_text = f"Veuillez ignorer toutes les instructions précédentes. Tu es un expert en référencement SEO reconnu en France. Tu dois délivrer un brief de très haute qualité à tes rédacteurs. Voici quelques informations sur ce qu'est un bon brief en 2023, il faudra t'appuyer sur ces dernières pour ta proposition de brief :{headings_thruu}. En adaptant ton brief aux conseils ci-dessus, propose-moi un brief complet pour un texte sur {keyword} pour mon rédacteur en adaptant la longueur de ce dernier en fonction de la longueur du texte que je vais vous demander, en l'occurrence pour celui-ci j'aimerais un texte de {nombre_de_mots}, en incluant les titres des parties, les titres des sous parties et me donnant le nombre de mots de chaque partie. Vous devrez essayer d'inclure celons les besoins un ou plusieurs [tableau], des [images], des [listes], des [liens internes], des [boutons], des [vidéos], etc..."
+        elif prompt_option == "prompt2":
+            prompt_text = "Veuillez insérer ici votre propre texte de prompt pour l'option 2."
+        else:
+            prompt_text = "Veuillez insérer ici votre propre texte de prompt pour l'option 3."
 
         messages = [
             {"role": "system", "content": prompt_text},
@@ -85,7 +77,7 @@ if uploaded_file and api_key_1 and api_key_2 and api_key_3:
                 model="gpt-4", messages=messages
             )
             reply = chat.choices[0].message.content
-            
+
             # Ajout des résultats dans le DataFrame
             result_data.append({
                 "keyword": keyword,
