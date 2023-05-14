@@ -157,5 +157,3 @@ else:
 else:
     st.warning("Veuillez fournir un fichier CSV et les clés API pour continuer.")
 
-
-
