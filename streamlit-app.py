@@ -17,16 +17,13 @@ except ImportError:
 # Titre de l'application Streamlit
 st.title("Sémantique Web : Le meilleur outil pour vos briefs")
 
-# Sidebar pour les paramètres utilisateur
-st.sidebar.title("Paramètres")
-
-uploaded_file = st.sidebar.file_uploader("Choisir un fichier CSV", type=["csv"])
-api_key_1 = st.sidebar.text_input("Clé API 1")
-api_key_2 = st.sidebar.text_input("Clé API 2")
-api_key_3 = st.sidebar.text_input("Clé API 3")
+uploaded_file = st.file_uploader("Choisir un fichier CSV", type=["csv"])
+api_key_1 = st.text_input("Clé API 1")
+api_key_2 = st.text_input("Clé API 2")
+api_key_3 = st.text_input("Clé API 3")
 
 # Ajout d'une option pour l'utilisateur de choisir le prompt
-prompt_option = st.sidebar.selectbox(
+prompt_option = st.selectbox(
     "Choisissez votre prompt",
     ("Semantique IA", "Géoloc IA", "Business IA")
 )
@@ -56,9 +53,9 @@ if uploaded_file and api_key_1 and api_key_2 and api_key_3:
         openai.api_key = next(api_key_cycle)
 
         # Création du prompt en fonction de l'option choisie par l'utilisateur
-        if prompt_option == "prompt1":
-            prompt_text = f"Veuillez ignorer toutes les instructions précédentes. Tu es un expert en référencement SEO reconnu en France. Tu dois délivrer un brief de très haute qualité à tes rédacteurs. Voici quelques informations sur ce qu'est un bon brief en 2023, il faudra t'appuyer sur ces dernières pour ta proposition de brief :{headings_thruu}. En adaptant ton brief aux conseils ci-dessus, propose-moi un brief complet pour un texte sur {keyword} pour mon rédacteur en adaptant la longueur de ce dernier en fonction de la longueur du texte que je vais vous demander, en l'occurrence pour celui-ci j'aimerais un texte de {nombre_de_mots}, en incluant les titres des parties, les titres des sous parties et me donnant le nombre de mots de chaque partie. Vous devrez essayer d'inclure celons les besoins un ou plusieurs [tableau], des [images], des [listes], des [liens internes], des [boutons], des [vidéos], etc..."
-        elif prompt_option == "prompt2":
+        if prompt_option == "Semantique IA":
+            prompt_text = f"Veuillez ignorer toutes les instructions précédentes. Tu es un expert en référencement SEO reconnu en France. Tu dois délivrer un brief de très haute qualité à tes rédacteurs. Voici quelques informations sur ce qu'est un bon brief en 2023, il faudra t'appuyer sur ces dernières pour ta proposition de brief :{headings_thruu}. En adaptant ton brief aux conseils ci-dessus, propose-moi un brief complet pour un texte sur {keyword} pour mon rédacteur en adaptant la longueur de ce dernier en fonction de la longueur du texte que je vais vous demander, en l'occurrence pour celui-ci j'aimerais un texte de {nombre_de_mots}, en incluant les titres des parties, les titres des sous parties et me donnant le nombre de mots de chaque partie. Vous devrez essayer d'inclure celons les besoins un ou plusieurs [tableau], des [images], des [listes], des [liens internes], des [boutons], des [videos], etc..."
+        elif prompt_option == "Géoloc IA":
             prompt_text = "Veuillez insérer ici votre propre texte de prompt pour l'option 2."
         else:
             prompt_text = "Veuillez insérer ici votre propre texte de prompt pour l'option 3."
