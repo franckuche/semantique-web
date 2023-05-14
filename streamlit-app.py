@@ -37,6 +37,9 @@ st.header("Génération de contenu avec OpenAI GPT-4")
 # Demander à l'utilisateur s'il souhaite générer du contenu supplémentaire
 generate_content = st.checkbox("Générer du contenu supplémentaire")
 
+# Création d'une liste pour stocker les résultats
+result_data = []
+
 if uploaded_file and api_key_1 and api_key_2 and api_key_3:
     # Remplacez les clés API par vos propres clés
     api_keys = [api_key_1, api_key_2, api_key_3]
@@ -46,9 +49,6 @@ if uploaded_file and api_key_1 and api_key_2 and api_key_3:
 
     # Lire le fichier CSV avec l'encodage UTF-8
     data = pd.read_csv(uploaded_file, encoding="utf-8")
-
-    # Création d'un DataFrame pour stocker les résultats
-    result_data = []
 
     # Traitement de chaque ligne du fichier CSV
     for index, row in data.iterrows():
@@ -63,13 +63,13 @@ if uploaded_file and api_key_1 and api_key_2 and api_key_3:
 
         # Création du prompt en fonction de l'option choisie par l'utilisateur
         if prompt_option == "Semantique IA":
-            prompt_text = f"Veuillez ignorer toutes les instructions précédentes. Tu es un expert en référencement SEO reconnu en France. Tu dois délivrer un brief de très haute qualité à tes rédacteurs. Voici quelques informations sur ce qu'est un bon brief en 2023, il faudra t'appuyer sur ces dernières pour ta proposition de brief :{headings_thruu}. En adaptant ton brief aux conseils ci-dessus, propose-moi un brief complet pour un texte sur {keyword} pour mon rédacteur en adaptant la longueur de ce dernier en fonction de la longueur du texte que je vais vous demander, en l'occurrence pour celui-ci j'aimerais un texte de {nombre_de_mots}, en incluant les titres des parties, les titres des sous parties et me donnant le nombre de mots de chaque partie. Vous devrez essayer d'inclure selon les besoins un ou plusieurs [tableau], des [images], des [listes], des [liens internes], des [boutons], des [vidéos], etc..."
-        
-        elif prompt_option == "Géoloc IA":
-            prompt_text = f"Veuillez insérer ici votre propre texte de prompt pour 'Géoloc IA'."
+            prompt_text = f"Veuillez ignorer toutes les instructions précédentes. Tu es un expert en référencement SEO reconnu en France. Tu dois délivrer un brief de très haute qualité à tes rédacteurs. Voici quelques informations sur ce qu'est un bon brief en 2023, il faudra t'appuyer sur ces dernières pour ta proposition de brief : {headings_thruu}. En adaptant ton brief aux conseils ci-dessus, propose-moi un brief complet pour un texte sur {keyword} pour mon rédacteur en adaptant la longueur de ce dernier en fonction de la longueur du texte que je vais vous demander, en l'occurrence pour celui-ci j'aimerais un texte de {nombre_de_mots}, en incluant les titres des parties, les titres des sous parties et me donnant le nombre de mots de chaque partie. Vous devrez essayer d'inclure selon les besoins un ou plusieurs [tableau], des [images], des [listes], des [liens internes], des [boutons], des [vidéos], etc..."
 
-        elif prompt_option == "Business IA":
-                rompt_text = f"Veuillez insérer ici votre propre texte de prompt pour 'Business IA'."
+    elif prompt_option == "Géoloc IA":
+        prompt_text = f"Veuillez insérer ici votre propre texte de prompt pour 'Géoloc IA'."
+
+    elif prompt_option == "Business IA":
+        prompt_text = f"Veuillez insérer ici votre propre texte de prompt pour 'Business IA'."
 
     messages = [
         {"role": "system", "content": prompt_text},
@@ -86,7 +86,7 @@ if uploaded_file and api_key_1 and api_key_2 and api_key_3:
         )
         reply = chat.choices[0].message.content
 
-        # Ajout des résultats dans le DataFrame
+        # Ajout des résultats dans la liste result_data
         result_data.append({
             "keyword": keyword,
             "Nb_de_mots_suggérés": nombre_de_mots,
@@ -111,7 +111,7 @@ if result_data:
     if generate_content:
         st.header("Génération de contenu avec OpenAI GPT-4")
 
-        # Création d'un DataFrame pour stocker les résultats de la deuxième itération
+        # Création d'une nouvelle liste pour stocker les résultats de la deuxième itération
         result_data_2 = []
 
         for index, row in df.iterrows():
@@ -133,12 +133,11 @@ if result_data:
                 )
                 reply_2 = chat_2.choices[0].message.content
 
-                # Ajout des résultats dans le DataFrame
+                #Ajout des résultats dans la liste result_data_2
                 result_data_2.append({
-                    "Structure Hn": structure_hn,
-                    "Article généré": reply_2
+                "Structure Hn": structure_hn,
+                "Article généré": reply_2
                 })
-
         # Conversion de la liste de résultats en DataFrame
         df_2 = pd.DataFrame(result_data_2)
 
@@ -153,3 +152,4 @@ if result_data:
 
 else:
     st.warning("Aucune donnée à afficher. Veuillez fournir un fichier CSV et les clés API pour continuer.")
+
