@@ -142,7 +142,7 @@ if generate_content:
 st.write(df_2)
 
     # Bouton pour télécharger le fichier CSV résultant de la deuxième itération
-    csv_2 = df_2.to_csv(index=False, encoding="utf-8").encode()
+csv_2 = df_2.to_csv(index=False, encoding="utf-8").encode()
     b64_2 = base64.b64encode(csv_2).decode()
     href_2 = f'<a href="data:file/csv;base64,{b64_2}" download="resultat_2.csv">Télécharger les résultats de la deuxième itération en format CSV</a>'
     st.markdown(href_2, unsafe_allow_html=True)
