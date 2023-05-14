@@ -68,51 +68,51 @@ if uploaded_file and api_key_1 and api_key_2 and api_key_3:
         elif prompt_option == "Business IA":
             prompt_text = "Veuillez insérer ici votre propre texte de prompt pour 'Business IA'."
 
-    # Création du prompt en fonction de l'option de style de rédaction choisie
-    if writing_style_option == "Pas de choix":
-        prompt_text += " Veuillez insérer ici votre propre texte de prompt pour 'Pas de choix'."
+        # Création du prompt en fonction de l'option de style de rédaction choisie
+        if writing_style_option == "Pas de choix":
+            prompt_text += " Veuillez insérer ici votre propre texte de prompt pour 'Pas de choix'."
 
-    elif writing_style_option == "Style 1":
-        prompt_text += " Veuillez insérer ici votre propre texte de prompt pour 'Style 1'."
+        elif writing_style_option == "Style 1":
+            prompt_text += " Veuillez insérer ici votre propre texte de prompt pour 'Style 1'."
 
-    elif writing_style_option == "Style 2":
-        prompt_text += " Veuillez insérer ici votre propre texte de prompt pour 'Style 2'."
+        elif writing_style_option == "Style 2":
+            prompt_text += " Veuillez insérer ici votre propre texte de prompt pour 'Style 2'."
 
-    elif writing_style_option == "Style 3":
-        prompt_text += " Veuillez insérer ici votre propre texte de prompt pour 'Style 3'."
+        elif writing_style_option == "Style 3":
+            prompt_text += " Veuillez insérer ici votre propre texte de prompt pour 'Style 3'."
 
-    messages = [
-        {"role": "system", "content": prompt_text},
-    ]
+        messages = [
+            {"role": "system", "content": prompt_text},
+        ]
 
-    message = "User: "
+        message = "User: "
 
-    if message:
-        messages.append(
-            {"role": "user", "content": message},
-        )
-        chat = openai.ChatCompletion.create(
-            model="gpt-4", messages=messages
-        )
-        reply = chat.choices[0].message.content
+        if message:
+            messages.append(
+                {"role": "user", "content": message},
+            )
+            chat = openai.ChatCompletion.create(
+                model="gpt-4", messages=messages
+            )
+            reply = chat.choices[0].message.content
 
-        # Ajout des résultats dans le DataFrame
-        result_data.append({
-            "keyword": keyword,
-            "Nb_de_mots_suggérés": nombre_de_mots,
-            "volume de recherche": volume_recherche,
-            "Structure Hn suggerée": reply
-        })
+            # Ajout des résultats dans le DataFrame
+            result_data.append({
+                "keyword": keyword,
+                "Nb_de_mots_suggérés": nombre_de_mots,
+                "volume de recherche": volume_recherche,
+                "Structure Hn suggerée": reply
+            })
 
-# Conversion de la liste de résultats en DataFrame
-df = pd.DataFrame(result_data)
+    # Conversion de la liste de résultats en DataFrame
+    df = pd.DataFrame(result_data)
 
-# Affichage du DataFrame dans l'application Streamlit
-st.write(df)
+    # Affichage du DataFrame dans l'application Streamlit
+    st.write(df)
 
-# Bouton pour télécharger le fichier CSV résultant
-csv = df.to_csv(index=False, encoding="utf-8").encode()
-b64 = base64.b64encode(csv).decode()
-href = f'<a href="data:file/csv;base64,{b64}" download="resultat.csv">Télécharger les résultats en format CSV</a>'
-st.markdown(href, unsafe_allow_html=True)
+    # Bouton pour télécharger le fichier CSV résultant
+    csv = df.to_csv(index=False, encoding="utf-8").encode()
+    b64 = base64.b64encode(csv).decode()
+    href = f'<a href="data:file/csv;base64,{b64}" download="resultat.csv">Télécharger les résultats en format CSV</a>'
+    st.markdown(href, unsafe_allow_html=True)
 
