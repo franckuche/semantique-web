@@ -69,7 +69,7 @@ if uploaded_file and api_key_1 and api_key_2 and api_key_3:
         prompt_text = f"Veuillez insérer ici votre propre texte de prompt pour 'Géoloc IA'."
 
         elif prompt_option == "Business IA":
-        prompt_text = f"Veuillez insérer ici votre propre texte de prompt pour 'Business IA'."
+            prompt_text = f"Veuillez insérer ici votre propre texte de prompt pour 'Business IA'."
 
     messages = [
         {"role": "system", "content": prompt_text},
