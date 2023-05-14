@@ -151,11 +151,11 @@ if result_data:
         href_2 = f'<a href="data:file/csv;base64,{b64_2}" download="resultat_2.csv">Télécharger les résultats de la deuxième itération en format CSV</a>'
         st.markdown(href_2, unsafe_allow_html=True)
 
-    else:
-        st.warning("Aucune donnée à afficher. Veuillez fournir un fichier CSV et les clés API pour continuer.")
+else:
+st.warning("Aucune donnée à afficher. Veuillez fournir un fichier CSV et les clés API pour continuer.")
 
-    else:
-        st.warning("Veuillez fournir un fichier CSV et les clés API pour continuer.")
+else:
+    st.warning("Veuillez fournir un fichier CSV et les clés API pour continuer.")
 
 
 
