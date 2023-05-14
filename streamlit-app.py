@@ -29,7 +29,7 @@ prompt_option = st.selectbox(
     ("Semantique IA", "Géoloc IA", "Business IA")
 )
 
-generate_content = st.checkbox("Générer du contenu supplémentaire")
+generate_content = st.checkbox("Souhaitez-vous réaliser l'écriture aussi ?")
 
 if uploaded_file and api_key_1 and api_key_2 and api_key_3:
     # Remplacez les clés API par vos propres clés
