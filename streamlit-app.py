@@ -76,7 +76,7 @@ if uploaded_file and api_key_1 and api_key_2 and api_key_3:
         message = "User: "
 
         if selected_writing_style and selected_writing_style != "Pas de choix":
-        writing_prompt = writing_style_options[selected_writing_style]
+            writing_prompt = writing_style_options[selected_writing_style]
         messages.append({"role": "user", "content": writing_prompt})
 
     if message:
