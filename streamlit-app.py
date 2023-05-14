@@ -152,7 +152,7 @@ if generate_content:
     st.markdown(href_2, unsafe_allow_html=True)
 
 else:
-st.warning("Veuillez fournir un fichier CSV et les clés API pour continuer.")
+    st.warning("Veuillez fournir un fichier CSV et les clés API pour continuer.")
 
 
 
