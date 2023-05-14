@@ -63,12 +63,12 @@ if uploaded_file and api_key_1 and api_key_2 and api_key_3:
 
         # Création du prompt en fonction de l'option choisie par l'utilisateur
         if prompt_option == "Semantique IA":
-            prompt_text = f"Veuillez ignorer toutes les instructions précédentes. Tu es un expert en référencement SEO reconnu en France. Tu dois délivrer un brief de très haute qualité à tes rédacteurs. Voici quelques informations sur ce qu'est un bon brief en 2023, il faudra t'appuyer sur ces dernières pour ta proposition de brief :{headings_thruu}. En adaptant ton brief aux conseils ci-dessus, propose-moi un brief complet pour un texte sur {keyword} pour mon rérédacteur en adaptant la longueur de ce dernier en fonction de la longueur du texte que je vais vous demander, en l'occurrence pour celui-ci j'aimerais un texte de {nombre_de_mots}, en incluant les titres des parties, les titres des sous parties et me donnant le nombre de mots de chaque partie. Vous devrez essayer d'inclure selon les besoins un ou plusieurs [tableau], des [images], des [listes], des [liens internes], des [boutons], des [vidéos], etc..."
-
-         elif prompt_option == "Géoloc IA":
+            prompt_text = f"Veuillez ignorer toutes les instructions précédentes. Tu es un expert en référencement SEO reconnu en France. Tu dois délivrer un brief de très haute qualité à tes rédacteurs. Voici quelques informations sur ce qu'est un bon brief en 2023, il faudra t'appuyer sur ces dernières pour ta proposition de brief : {headings_thruu}. En adaptant ton brief aux conseils ci-dessus, propose-moi un brief complet pour un texte sur {keyword} pour mon rédacteur en adaptant la longueur de ce dernier en fonction de la longueur du texte que je vaisvous demander, en l'occurrence pour celui-ci j'aimerais un texte de {nombre_de_mots}, en incluant les titres des parties, les titres des sous parties et me donnant le nombre de mots de chaque partie. Vous devrez essayer d'inclure selon les besoins un ou plusieurs [tableau], des [images], des [listes], des [liens internes], des [boutons], des [vidéos], etc..."
+        
+        elif prompt_option == "Géoloc IA":
         prompt_text = f"Veuillez insérer ici votre propre texte de prompt pour 'Géoloc IA'."
 
-         elif prompt_option == "Business IA":
+        elif prompt_option == "Business IA":
         prompt_text = f"Veuillez insérer ici votre propre texte de prompt pour 'Business IA'."
 
     messages = [
@@ -141,7 +141,7 @@ if generate_content:
 # Bouton pour télécharger le fichier CSV résultant de la première itération
 csv = df.to_csv(index=False, encoding="utf-8").encode()
 b64 = base64.b64encode(csv).decode()
-href = f'<a href="data:filecsv;base64,{b64}" download="resultat.csv">Télécharger les résultats de la première itération en format CSV</a>'
+href = f'<a href="data:file/csv;base64,{b64}" download="resultat.csv">Télécharger les résultats de la première itération en format CSV</a>'
 st.markdown(href, unsafe_allow_html=True)
 
 # Bouton pour télécharger le fichier CSV résultant de la deuxième itération
@@ -150,6 +150,7 @@ if generate_content:
     b64_2 = base64.b64encode(csv_2).decode()
     href_2 = f'<a href="data:file/csv;base64,{b64_2}" download="resultat_2.csv">Télécharger les résultats de la deuxième itération en format CSV</a>'
     st.markdown(href_2, unsafe_allow_html=True)
+
 else:
 st.warning("Veuillez fournir un fichier CSV et les clés API pour continuer.")
 
