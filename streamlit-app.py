@@ -94,67 +94,62 @@ if uploaded_file and api_key_1 and api_key_2 and api_key_3:
             "Structure Hn suggerée": reply
         })
 
-# Conversion de la liste de résultats en DataFrame
-if result_data:
-    df = pd.DataFrame(result_data)
+    # Conversion de la liste de résultats en DataFrame
+    if result_data:
+        df = pd.DataFrame(result_data)
 
-    # Affichage du DataFrame dans l'application Streamlit
-    st.write(df)
+        # Affichage du DataFrame dans l'application Streamlit
+        st.write(df)
 
-    # Bouton pour télécharger le fichier CSV résultant de la première itération
-    csv = df.to_csv(index=False, encoding="utf-8").encode()
-    b64 = base64.b64encode(csv).decode()
-    href = f'<a href="data:file/csv;base64,{b64}" download="resultat.csv">Télécharger les résultats de la première itération en format CSV</a>'
-    st.markdown(href, unsafe_allow_html=True)
+        # Bouton pour télécharger le fichier CSV résultant de la première itération
+        csv = df.to_csv(index=False, encoding="utf-8").encode()
+        b64 = base64.b64encode(csv).decode()
+        href = f'<a href="data:file/csv;base64,{b64}" download="resultat.csv">Télécharger les résultats de la première itération en format CSV</a>'
+        st.markdown(href, unsafe_allow_html=True)
 
-    # Deuxième itération pour générer un appel à OpenAI GPT-4 avec un prompt de rédaction
-    if generate_content and writing_style != "Pas de choix":
-        st.header("Génération de contenu avec OpenAI GPT-4")
+        # Deuxième itération pour générer un appel à OpenAI GPT-4 avec un prompt de rédaction
+        if generate_content and writing_style != "Pas de choix":
+            st.header("Génération de contenu avec OpenAI GPT-4")
 
-        # Création d'une nouvelle liste pour stocker les résultats de la deuxième itération
-        result_data_2 = []
+            # Création d'une nouvelle liste pour stocker les résultats de la deuxième itération
+            result_data_2 = []
 
-        for index, row in df.iterrows():
-            structure_hn = row["Structure Hn suggerée"]
+            for index, row in df.iterrows():
+                structure_hn = row["Structure Hn suggerée"]
 
-            # Création du prompt en utilisant la structure Hn et le style de rédaction
-            prompt_text_2 = f"{structure_hn} Veuillez écrire un article basé sur cette structure en utilisant le style de rédaction '{writing_style}'."
+                # Création du prompt en utilisant la structure Hn et le style de rédaction
+                prompt_text_2 = f"{structure_hn} Veuillez écrire un article basé sur cette structure en utilisant le style de rédaction '{writing_style}'."
 
-            messages_2 = [
-                {"role": "system", "content": prompt_text_2},
-            ]
+                messages_2 = [
+                    {"role": "system", "content": prompt_text_2},
+                ]
 
-            if message:
-                messages_2.append(
-                    {"role": "user", "content": message},
-                )
-                chat_2 = openai.ChatCompletion.create(
-                    model="gpt-4", messages=messages_2
-                )
-                reply_2 = chat_2.choices[0].message.content
+                if message:
+                    messages_2.append(
+                        {"role": "user", "content": message},
+                    )
+                    chat_2 = openai.ChatCompletion.create(
+                        model="gpt-4", messages=messages_2
+                    )
+                    reply_2 = chat_2.choices[0].message.content
 
-                # Ajout des résultats dans la liste result_data_2
-                result_data_2.append({
-                    "Structure Hn": structure_hn,
-                    "Article généré": reply_2
-                })
+                    # Ajout des résultats dans la liste result_data_2
+                    result_data_2.append({
+                        "Structure Hn": structure_hn,
+                        "Article généré": reply_2
+                    })
 
-        # Conversion de la liste de résultats en DataFrame
-        df= pd.DataFrame(result_data_2)
+            # Conversion de la liste de résultats en DataFrame
+            df_2 = pd.DataFrame(result_data_2)
 
-        # Affichage du DataFrame de la deuxième itération dans l'application Streamlit
-        st.write(df_2)
+            # Affichage du DataFrame de la deuxième itération dans l'application Streamlit
+            st.write(df_2)
 
-        # Bouton pour télécharger le fichier CSV résultant de la deuxième itération
-        csv_2 = df_2.to_csv(index=False, encoding="utf-8").encode()
-        b64_2 = base64.b64encode(csv_2).decode()
-        href_2 = f'<a href="data:file/csv;base64,{b64_2}" download="resultat_2.csv">Télécharger les résultats de la deuxième itération en format CSV</a>'
-        st.markdown(href_2, unsafe_allow_html=True)
-
-else:
-    st.warning("Aucune donnée à afficher. Veuillez fournir un fichier CSV et les clés API pour continuer.")
+            # Bouton pour télécharger le fichier CSV résultant de la deuxième itération
+            csv_2 = df_2.to_csv(index=False, encoding="utf-8").encode()
+            b64_2 = base64.b64encode(csv_2).decode()
+            href_2 = f'<a href="data:file/csv;base64,{b64_2}" download="resultat_2.csv">Télécharger les résultats de la deuxième itération en format CSV</a>'
+            st.markdown(href_2, unsafe_allow_html=True)
 
     else:
-        st.warning("Veuillez fournir un fichier CSV et les clés API pour continuer.")
-
-
+        st.warning("Aucune donnée à afficher. Veuillez fournir un fichier CSV et les clés API pour continuer.")
