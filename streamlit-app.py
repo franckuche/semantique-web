@@ -155,6 +155,6 @@ else:
     st.warning("Aucune donnée à afficher. Veuillez fournir un fichier CSV et les clés API pour continuer.")
 
 else:
-st.warning("Veuillez fournir un fichier CSV et les clés API pour continuer.")
+    st.warning("Veuillez fournir un fichier CSV et les clés API pour continuer.")
 
 
