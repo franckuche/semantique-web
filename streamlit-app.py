@@ -5,14 +5,6 @@ import itertools
 import streamlit as st
 import base64
 
-# Installer le package OpenAI si nécessaire
-try:
-    import openai
-except ImportError:
-    st.write("Installation du package OpenAI en cours...")
-    st.system("!pip install openai")
-    import openai
-
 # Titre de l'application Streamlit
 st.title("Sémantique Web : Le meilleur outil pour vos briefs")
 
@@ -23,22 +15,31 @@ api_key_2 = st.text_input("Clé API 2")
 api_key_3 = st.text_input("Clé API 3")
 
 # Demande du prompt et du style de rédaction
-prompt_option = st.selectbox(
-    "Choisissez votre prompt",
-    ("Semantique IA", "Géoloc IA", "Business IA")
-)
+prompt_options = {
+    "Semantique IA": "Veuillez ignorer toutes les instructions précédentes...",
+    "Géoloc IA": "Veuillez insérer ici votre propre texte de prompt pour 'Géoloc IA'.",
+    "Business IA": "Veuillez insérer ici votre propre texte de prompt pour 'Business IA'."
+}
 
-writing_style_option = st.selectbox(
-    "Quel style de rédaction souhaitez-vous ?",
-    ("Style 1", "Style 2", "Style 3")
-)
+selected_prompt = st.selectbox("Choisissez votre prompt", list(prompt_options.keys()))
 
-# Création d'un DataFrame pour stocker les résultats
-result_data = []
+writing_style_options = {
+    "Pas de choix": None,
+    "Style 1": "Prompt pour le Style 1",
+    "Style 2": "Prompt pour le Style 2",
+    "Style 3": "Prompt pour le Style 3"
+}
 
-# Vérification si le fichier et les clés API sont fournis
+selected_writing_style = st.selectbox("Quel style de rédaction souhaitez-vous ?", list(writing_style_options.keys()))
+
+# Deuxième itération pour générer un appel à OpenAI GPT-4 avec un prompt de rédaction
+st.header("Génération de contenu avec OpenAI GPT-4")
+
+# Demander à l'utilisateur s'il souhaite générer du contenu supplémentaire
+generate_content = st.checkbox("Générer du contenu supplémentaire")
+
 if uploaded_file and api_key_1 and api_key_2 and api_key_3:
-    # Regroupement des clés API dans une liste
+    # Remplacer les clés API par vos propres clés
     api_keys = [api_key_1, api_key_2, api_key_3]
 
     # Créer un itérable pour les clés API
@@ -47,9 +48,11 @@ if uploaded_file and api_key_1 and api_key_2 and api_key_3:
     # Lire le fichier CSV avec l'encodage UTF-8
     data = pd.read_csv(uploaded_file, encoding="utf-8")
 
+    # Création d'un DataFrame pour stocker les résultats
+    result_data = []
+
     # Traitement de chaque ligne du fichier CSV
     for index, row in data.iterrows():
-        # Extraction des données de la ligne actuelle
         keyword = row["keyword"]
         nombre_de_mots = row["Nb de mots suggérés"]
         volume_recherche = row["Volume de recherches"]
@@ -60,45 +63,38 @@ if uploaded_file and api_key_1 and api_key_2 and api_key_3:
         openai.api_key = next(api_key_cycle)
 
         # Création du prompt en fonction de l'option choisie par l'utilisateur
-        if prompt_option == "Semantique IA":
-            prompt_text = f"Veuillez ignorer toutes les instructions précédentes. Tu es un expert en référencement SEO reconnu en France. Tu dois délivrer un brief de très haute qualité à tes rédacteurs. Voici quelques informations sur ce qu'est un bon brief en 2023, il faudra t'appuyer sur ces dernières pour ta proposition de brief : {headings_thruu}. En adaptant ton brief aux conseils ci-dessus, propose-moi un brief complet pour un texte sur {keyword} pour mon rérédacteur en adaptant la longueur de ce dernier en fonction de la longueur du texte que je vais vous demander, en l'occurrence pour celui-ci j'aimerais un texte de {nombre_de_mots}, en incluant les titres des parties, les titres des sous parties et me donnant le nombre de mots de chaque partie. Vous devrez essayer d'inclure selon les besoins un ou plusieurs [tableau], des [images], des [listes], des [liens internes], des [boutons], des [vidéos], etc..."
-        elif prompt_option == "Géoloc IA":
-            prompt_text = f"Veuillez insérer ici votre propre texte de prompt pour 'Géoloc IA'."
-        elif prompt_option == "Business IA":
-            prompt_text = f"Veuillez insérer ici votre propre texte de prompt pour 'Business IA'."
-    # Choisir le prompt en fonction du style de rédaction choisi
-    if writing_style_option == "Style 1":
-        prompt_text += " (Style 1)"
-    elif writing_style_option == "Style 2":
-        prompt_text += " (Style 2)"
-    elif writing_style_option == "Style 3":
-        prompt_text += " (Style 3)"
+        prompt_text = prompt_options[selected_prompt].format(
+            headings_thruu=headings_thruu,
+            keyword=keyword,
+            nombre_de_mots=nombre_de_mots
+        )
 
-    messages = [
-        {"role": "system", "content": prompt_text},
-    ]
+        messages = [
+            {"role": "system", "content": prompt_text},
+        ]
 
-    message = "User: "
+        message = "User: "
+
+        if selected_writing_style and selected_writing_style != "Pas de choix":
+        writing_prompt = writing_style_options[selected_writing_style]
+        messages.append({"role": "user", "content": writing_prompt})
 
     if message:
-        messages.append(
-            {"role": "user", "content": message},
-        )
-        try:
-            chat = openai.ChatCompletion.create(
-                model="gpt-4", messages=messages
-            )
-            reply = chat.choices[0].message.content
+        messages.append({"role": "user", "content": message})
 
-            # Ajout des résultats dans le DataFrame
-            result_data.append({
-                "keyword": keyword,
-                "Nb_de_mots_suggérés": nombre_de_mots,
-                "volume de recherche": volume_recherche,
-                "Structure Hn suggerée": reply
-            })
-        except Exception as e:
-            st.error(f"Erreur lors de la génération du contenu pour la ligne {index + 1}: {str(e)}")
+    try:
+        chat = openai.ChatCompletion.create(model="gpt-4", messages=messages)
+        reply = chat.choices[0].message.content
+
+        # Ajout des résultats dans le DataFrame
+        result_data.append({
+            "keyword": keyword,
+            "Nb_de_mots_suggérés": nombre_de_mots,
+            "volume de recherche": volume_recherche,
+            "Structure Hn suggerée": reply
+        })
+    except Exception as e:
+        st.error(f"Erreur lors de la génération du contenu pour la ligne {index + 1}: {str(e)}")
 
 # Conversion de la liste de résultats en DataFrame
 df = pd.DataFrame(result_data)
@@ -111,3 +107,11 @@ csv = df.to_csv(index=False, encoding="utf-8").encode()
 b64 = base64.b64encode(csv).decode()
 href = f'<a href="data:file/csv;base64,{b64}" download="resultat.csv">Télécharger les résultats en format CSV</a>'
 st.markdown(href, unsafe_allow_html=True)
+
+# Bouton pour télécharger le fichier CSV résultant de la première itération
+if generate_content:
+    csv = df.to_csv(index=False, encoding="utf-8").encode()
+    b64 = base64.b64encode(csv).decode()
+    href = f'<a href="data:file/csv;base64,{b64}" download="resultat.csv">Télécharger les résultats en format CSV</a>'
+    st.markdown(href, unsafe_allow_html=True)
+
