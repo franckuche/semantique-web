@@ -22,12 +22,17 @@ api_key_1 = st.text_input("Clé API 1")
 api_key_2 = st.text_input("Clé API 2")
 api_key_3 = st.text_input("Clé API 3")
 
-# Demande du prompt et du style de rédaction
+# Demande du prompt
 prompt_option = st.selectbox(
     "Choisissez votre prompt",
     ("Semantique IA", "Géoloc IA", "Business IA")
 )
 
+# Ajout d'une case à cocher pour la rédaction
+st.subheader("Rédaction")
+writing_checkbox = st.checkbox("Rédiger du texte")
+
+# Demande du style de rédaction
 writing_style_option = st.selectbox(
     "Quel style de rédaction souhaitez-vous ?",
     ("Pas de choix", "Style 1", "Style 2", "Style 3")
@@ -101,7 +106,8 @@ if uploaded_file and api_key_1 and api_key_2 and api_key_3:
                 "keyword": keyword,
                 "Nb_de_mots_suggérés": nombre_de_mots,
                 "volume de recherche": volume_recherche,
-                "Structure Hn suggerée": reply
+                "Structure Hn suggerée": reply,
+                "Rédaction": reply if writing_checkbox else None
             })
 
     # Conversion de la liste de résultats en DataFrame
@@ -115,4 +121,3 @@ if uploaded_file and api_key_1 and api_key_2 and api_key_3:
     b64 = base64.b64encode(csv).decode()
     href = f'<a href="data:file/csv;base64,{b64}" download="resultat.csv">Télécharger les résultats en format CSV</a>'
     st.markdown(href, unsafe_allow_html=True)
-
