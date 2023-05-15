@@ -26,8 +26,6 @@ api_key_3 = st.text_input("Clé API 3")
 prompt_option = st.selectbox(
     "Choisissez votre prompt",
     ("Semantique IA", "Géoloc IA", "Business IA")
-    help="Veuillez choisir le type de prompt que vous souhaitez utiliser."
-
 )
 
 # Ajout d'une case à cocher pour la rédaction
