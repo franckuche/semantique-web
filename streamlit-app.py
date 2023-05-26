@@ -6,7 +6,6 @@ import itertools
 import streamlit as st
 import base64
 
-# Installer le package OpenAI si nécessaire
 try:
     import openai
 except ImportError:
@@ -14,10 +13,8 @@ except ImportError:
     st.system("!pip install openai")
     import openai
 
-# Titre de l'application Streamlit
 st.title("Sémantique Web : Le meilleur outil pour vos briefs")
 
-# Sidebar pour les paramètres utilisateur
 st.sidebar.title("Paramètres")
 
 uploaded_file = st.sidebar.file_uploader("Choisir un fichier CSV", type=["csv"])
@@ -25,39 +22,30 @@ api_key_1 = st.sidebar.text_input("Clé API 1")
 api_key_2 = st.sidebar.text_input("Clé API 2")
 api_key_3 = st.sidebar.text_input("Clé API 3")
 
-# Ajout d'une option pour l'utilisateur de choisir le prompt
 prompt_option = st.sidebar.selectbox(
     "Choisissez votre prompt",
     ("Semantique IA", "Géoloc IA", "Business IA")
 )
 
-# Création d'un DataFrame pour stocker les résultats
 result_data = []
 
 if uploaded_file and api_key_1 and api_key_2 and api_key_3:
-    # Remplacez les clés API par vos propres clés
     api_keys = [api_key_1, api_key_2, api_key_3]
-
-    # Créer un itérable pour les clés API
     api_key_cycle = itertools.cycle(api_keys)
 
-    # Lire le fichier CSV avec l'encodage UTF-8
     data = pd.read_csv(uploaded_file, encoding="utf-8")
 
-    # Traitement de chaque ligne du fichier CSV
     for index, row in data.iterrows():
         keyword = row["keyword"]
-        nombre_de_mots = row["Nb de mots suggérés"]
+        nombre_de_mots_suggérés = row["nombre de mots suggérés"]
         volume_recherche = row["Volume de recherches"]
-        headings_thruu = row["headings_thruuu"]
-        semantique_thruuu = row["Mots / concepts importants à développer"]
+        Headings = row["Headings"]
+        Champs_sémantique = row["Champs sémantique"]
 
-        # Choisir la clé API suivante
         openai.api_key = next(api_key_cycle)
 
-        # Création du prompt en fonction de l'option choisie par l'utilisateur
         if prompt_option == "prompt1":
-            prompt_text = f"Veuillez ignorer toutes les instructions précédentes. Tu es un expert en référencement SEO reconnu en France. Tu dois délivrer un brief de très haute qualité à tes rédacteurs. Voici quelques informations sur ce qu'est un bon brief en 2023, il faudra t'appuyer sur ces dernières pour ta proposition de brief :{headings_thruu}. En adaptant ton brief aux conseils ci-dessus, propose-moi un brief complet pour un texte sur {keyword} pour mon rédacteur en adaptant la longueur de ce dernier en fonction de la longueur du texte que je vais vous demander, en l'occurrence pour celui-ci j'aimerais un texte de {nombre_de_mots}, en incluant les titres des parties, les titres des sous parties et me donnant le nombre de mots de chaque partie. Vous devrez essayer d'inclure celons les besoins un ou plusieurs [tableau], des [images], des [listes], des [liens internes], des [boutons], des [vidéos], etc..."
+            prompt_text = f"Veuillez ignorer toutes les instructions précédentes. Tu es un expert en référencement SEO reconnu en France. Tu dois délivrer un brief de très haute qualité à tes rédacteurs. Voici quelques informations sur ce qu'est un bon brief en 2023, il faudra t'appuyer sur ces dernières pour ta proposition de brief :{Headings}. En adaptant ton brief aux conseils ci-dessus, propose-moi un brief complet pour un texte sur {keyword} pour mon rédacteur en adaptant la longueur de ce dernier en fonction de la longueur du texte que je vais vous demander, en l'occurrence pour celui-ci j'aimerais un texte de {nombre_de_mots_suggérés}, en incluant les titres des parties, les titres des sous parties et me donnant le nombre de mots de chaque partie. Vous devrez essayer d'inclure celons les besoins un ou plusieurs [tableau], des [images], des [listes], des [liens internes], des [boutons], des [vidéos], etc..."
         elif prompt_option == "prompt2":
             prompt_text = "Veuillez insérer ici votre propre texte de prompt pour l'option 2."
         else:
@@ -78,23 +66,18 @@ if uploaded_file and api_key_1 and api_key_2 and api_key_3:
             )
             reply = chat.choices[0].message.content
 
-            # Ajout des résultats dans le DataFrame
             result_data.append({
                 "keyword": keyword,
-                "Nb_de_mots_suggérés": nombre_de_mots,
+                "nombre de mots suggérés": nombre_de_mots_suggérés,
                 "volume de recherche": volume_recherche,
                 "Structure Hn suggerée": reply
             })
 
-    # Conversion de la liste de résultats en DataFrame
     df = pd.DataFrame(result_data)
 
-    # Affichage du DataFrame dans l'application Streamlit
     st.write(df)
 
-    # Bouton pour télécharger le fichier CSV résultant
     csv = df.to_csv(index=False, encoding="utf-8").encode()
     b64 = base64.b64encode(csv).decode()
     href = f'<a href="data:file/csv;base64,{b64}" download="resultat.csv">Télécharger les résultats en format CSV</a>'
     st.markdown(href, unsafe_allow_html=True)
-
