@@ -69,7 +69,7 @@ Vous devrez essayer d'inclure lorsque c'est logique et pertinent par rapport aux
 
             result_data.append({
                 "keyword": keyword,
-                "nombre de mots suggérés": nombre_de_mots_suggérés,
+                "Nombre de mots suggérés": nombre_de_mots_suggérés,
                 "volume de recherche": volume_recherche,
                 "Structure Hn suggerée": reply
             })
